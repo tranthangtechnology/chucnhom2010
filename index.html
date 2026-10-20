@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chúc Mừng Ngày 20/10</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+    canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+      transition: transform 0.5s ease;
+    }
+
+    h1 { color: #d63384; margin-bottom: 15px; font-size: 1.8rem; }
+    p { color: #444; line-height: 1.6; font-size: 1.1rem; min-height: 80px; }
+
+    .btn-open {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-open:hover { transform: scale(1.05); background: #ff6b81; }
+    .btn-open:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="petalCanvas"></canvas>
+
+  <div class="card" id="card">
+    <h1>💐 Chúc Mừng Ngày 20/10 💐</h1>
+    <p id="wishText">Bấm vào nút bên dưới để mở món quà đặc biệt nhé!</p>
+    <button class="btn-open" id="btnOpen" onclick="openGift()">Mở Quà Ngay 🎁</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    let isOpened = false;
+    let typeTimeout = null;
+
+    // Hiệu ứng pháo hoa & lời chúc khi bấm nút (chỉ cho bấm 1 lần duy nhất)
+    function openGift() {
+      if (isOpened) return; 
+      isOpened = true;
+
+      const btn = document.getElementById("btnOpen");
+      btn.disabled = true; // Khóa nút ngay lập tức để tránh lỗi lặp chữ
+
+      // Bắn pháo hoa / hoa giấy
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Lời chúc chạy từng chữ
+      const message = "Chúc các bạn luôn xinh đẹp, rạng rỡ, tràn ngập niềm vui và luôn thành công trên con đường mình đã chọn! Chúc mừng 20-10 thật vui vẻ ! ✨💖";
+      let i = 0;
+      const speed = 50;
+      const textElem = document.getElementById("wishText");
+      textElem.innerHTML = "";
+
+      if (typeTimeout) clearTimeout(typeTimeout);
+
+      function typeWriter() {
+        if (i < message.length) {
+          textElem.innerHTML += message.charAt(i);
+          i++;
+          typeTimeout = setTimeout(typeWriter, speed);
+        } else {
+          // Khi chạy xong chữ thì ẩn nút đi cho giao diện đẹp
+          btn.style.display = "none";
+        }
+      }
+      typeWriter();
+    }
+
+    // Canvas tạo hiệu ứng cánh hoa rơi đơn giản
+    const canvas = document.getElementById('petalCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const petals = Array.from({ length: 30 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 8 + 5,
+      speedY: Math.random() * 1.5 + 0.5,
+      speedX: Math.random() * 1 - 0.5
+    }));
+
+    function drawPetals() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 182, 193, 0.7)';
+      petals.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        p.y += p.speedY;
+        p.x += p.speedX;
+        if (p.y > canvas.height) p.y = -10;
+      });
+      requestAnimationFrame(drawPetals);
+    }
+    drawPetals();
+  </script>
+</body>
+</html>
