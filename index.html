@@ -69,22 +69,19 @@
     let isOpened = false;
     let typeTimeout = null;
 
-    // Hiệu ứng pháo hoa & lời chúc khi bấm nút (chỉ cho bấm 1 lần duy nhất)
     function openGift() {
       if (isOpened) return; 
       isOpened = true;
 
       const btn = document.getElementById("btnOpen");
-      btn.disabled = true; // Khóa nút ngay lập tức để tránh lỗi lặp chữ
+      btn.disabled = true; 
 
-      // Bắn pháo hoa / hoa giấy
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 }
       });
 
-      // Lời chúc chạy từng chữ
       const message = "Chúc các bạn luôn xinh đẹp, rạng rỡ, tràn ngập niềm vui và luôn thành công trên con đường mình đã chọn! Chúc mừng 20-10 thật vui vẻ ! ✨💖";
       let i = 0;
       const speed = 50;
@@ -99,14 +96,12 @@
           i++;
           typeTimeout = setTimeout(typeWriter, speed);
         } else {
-          // Khi chạy xong chữ thì ẩn nút đi cho giao diện đẹp
           btn.style.display = "none";
         }
       }
       typeWriter();
     }
 
-    // Canvas tạo hiệu ứng cánh hoa rơi đơn giản
     const canvas = document.getElementById('petalCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
